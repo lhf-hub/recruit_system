@@ -1,6 +1,11 @@
 # recruit_system
 ## 运行环境：
-- 前端：vscode（vue框架）
+- 前端：导航到“client”目录并使用 npm 安装依赖项：
+```bash
+cd ./client
+npm install
+```
+运行：npm run dev
 
 - 后端：idea（springboot框架）
 
