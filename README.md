@@ -5,7 +5,10 @@
 cd ./client
 npm install
 ```
-运行：npm run dev
+运行：
+```bash
+npm run dev
+```
 
 - 后端：idea（springboot框架）
 
