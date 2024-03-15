@@ -1,0 +1,46 @@
+<template>
+  <VaCard>
+    <VaCardContent style="box-shadow: 0 2px 3px black">
+      <section>
+        <header class="flex items-center justify-between">
+          <div class="text-lg font-semibold grow">{{ value }} 份</div>
+          <div
+            class="p-1 rounded"
+            :style="{
+              backgroundColor: iconBackground,
+              color: iconColor,
+            }"
+          >
+            <slot name="icon"></slot>
+          </div>
+        </header>
+        <div>
+          <p class="mb-2">{{ title }}</p>
+          <p class="text-xs text-secondary">
+            录用人数
+            <span :class="changeClass"> {{ changeText }} 人 </span>
+          </p>
+        </div>
+      </section>
+    </VaCardContent>
+  </VaCard>
+</template>
+
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { VaCard } from 'vuestic-ui'
+
+const props = defineProps<{
+  title: string
+  value: string | number
+  changeText: string
+  up: boolean
+  iconBackground: string
+  iconColor: string
+}>()
+
+const changeClass = computed(() => ({
+  'text-success': props.up,
+  'text-red-600': !props.up,
+}))
+</script>
