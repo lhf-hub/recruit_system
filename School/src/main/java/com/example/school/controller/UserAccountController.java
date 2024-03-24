@@ -2,11 +2,9 @@ package com.example.school.controller;
 
 import com.example.school.combineEntity.AccountAndUser;
 import com.example.school.combineEntity.Result;
+import com.example.school.entity.ApplicationInfo;
 import com.example.school.entity.UserAccount;
-import com.example.school.mapper.ApplicationInfoMapper;
-import com.example.school.mapper.InformationMapper;
-import com.example.school.mapper.NormalUserMapper;
-import com.example.school.mapper.UserAccountMapper;
+import com.example.school.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +23,8 @@ public class UserAccountController {
     private ApplicationInfoMapper applicationInfoMapper;
     @Autowired
     private InformationMapper informationMapper;
+    @Autowired
+    private JobPositionMapper jobPositionMapper;
 
     @PostMapping("/signup")/*普通用户账号注册ok*/
     public Result signup(@RequestBody UserAccount userAccount){
@@ -70,6 +70,17 @@ public class UserAccountController {
     public Result delete(@RequestBody UserAccount userAccount){
         try{
             normalUserMapper.delete(userAccount.getUserId());/*简历的删除*/
+
+            List<ApplicationInfo> applicationInfoList = applicationInfoMapper.findAllU(userAccount.getUserId());
+            for(int i=0;i<applicationInfoList.size();++i){
+                ApplicationInfo applicationInfoTemp=applicationInfoList.get(i);
+                int postId=applicationInfoMapper.find_one(applicationInfoTemp.getApplicationId()).getPostId();
+                int num=jobPositionMapper.find_one(postId).getNumberRequirement();/*检查剩余名额*/
+                if(Objects.equals(applicationInfoTemp.getStatus(), "录用")) {
+                    jobPositionMapper.updateNumIncrease(num + 1, postId);
+                }
+            }
+
             applicationInfoMapper.deleteAllUser(userAccount.getUserId());/*应聘信息删除*/
             informationMapper.delete(userAccount.getUserId());/*删除用户的应聘消息*/
             int result = userAccountMapper.delete(userAccount.getUserId());/*账号的删除*/

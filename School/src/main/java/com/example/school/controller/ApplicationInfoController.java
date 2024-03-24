@@ -24,7 +24,7 @@ public class ApplicationInfoController {
     @Autowired
     private ApplicationInfoMapper applicationInfoMapper;
     @Autowired
-    private InformationController informationController;
+    private InformationController informationController;/*用于消息通知用*/
     @Autowired
     private JobPositionMapper jobPositionMapper;
     @Autowired
@@ -37,7 +37,7 @@ public class ApplicationInfoController {
             int postId=applicationInfo.getPostId();
             List<NormalUser> normalUsers=normalUserMapper.findOne(userId);
             NormalUser normalUser=normalUsers.get(0);
-            if(Objects.equals(normalUser.getName(), "请添加姓名")){
+            if(Objects.equals(normalUser.getName(), "")){
                 return Result.error(500,"请先完成简历填写");
             }
 
@@ -94,7 +94,7 @@ public class ApplicationInfoController {
         }
     }
 
-    @PostMapping("/delete")/*应聘申请被淘汰后可删除ok*/
+    @PostMapping("/delete")/*应聘申请删除ok*/
     public Result delete(@RequestBody ApplicationInfo applicationInfo){
         int result = applicationInfoMapper.delete(applicationInfo);
         if(result > 0)
@@ -154,9 +154,6 @@ public class ApplicationInfoController {
         int result = applicationInfoMapper.updateFinal(applicationInfo);
         informationController.insert(applicationInfo.getApplicationId());
 
-        int postId=applicationInfoMapper.find_one(applicationInfo.getApplicationId()).getPostId();
-        int num=jobPositionMapper.find_one(postId).getNumberRequirement();/*检查剩余名额*/
-        jobPositionMapper.updateNumIncrease(num+1,postId);
         if(result > 0)
         {
             return Result.ok("应聘流程信息更新成功");
@@ -186,7 +183,7 @@ public class ApplicationInfoController {
         applicationInfoStats.setHiredNum(applicationInfoMapper.get_statusNum("录用",category));
         applicationInfoStats.setOutNum(applicationInfoMapper.get_statusNum("淘汰",category));
 
-        applicationInfoStats.setSpecialistNum(applicationInfoMapper.get_eduNum("专科",category));
+        applicationInfoStats.setSpecialistNum(applicationInfoMapper.get_eduNum("大专",category));
         applicationInfoStats.setUndergraduateNum(applicationInfoMapper.get_eduNum("本科",category));
         applicationInfoStats.setMasterNum(applicationInfoMapper.get_eduNum("硕士",category));
         applicationInfoStats.setDoctorNum(applicationInfoMapper.get_eduNum("博士",category));

@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface InformationMapper {
     @Select("select * from information where user_id=#{userId} and " +
-            "inform_title like concat('%', #{informTitle}, '%') and user_id=#{userId}")
+            "inform_title like concat('%', #{informTitle}, '%') and user_id=#{userId} ORDER BY inform_time DESC")
     List<Information> find(Information information);
 
     @Insert("insert into information(user_id,post_id,inform_title,inform_content,inform_time,inform_state) values " +

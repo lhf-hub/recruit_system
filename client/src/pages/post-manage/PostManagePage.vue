@@ -48,13 +48,15 @@ const showDeletePostModal = async (postId: number) => {
   }
 }
 const showEditPostModal = async (post: Post) => {
-  alert('修改岗位' + post.postId)
   const res = await job.update(post)
   if (res.data.code === 200) {
     getPosts()
     bus.emit('alert', { type: 'success', content: '修改成功' })
-  } else {
-    bus.emit('alert', { type: 'error', content: '服务器错误' })
+  }else if(res.data.code === 501){
+    bus.emit('alert', { type: 'error', content: res.data.msg })
+  } 
+  else {
+    bus.emit('alert', { type: 'error', content: '岗位更新错误,请检查格式' })
   }
 }
 
@@ -91,8 +93,11 @@ const addPost = async () => {
   if (res.data.code === 200) {
     getPosts()
     bus.emit('alert', { type: 'success', content: '新增成功' })
-  } else {
-    bus.emit('alert', { type: 'error', content: '服务器错误' })
+  }else if(res.data.code === 501){
+    bus.emit('alert', { type: 'error', content: res.data.msg })
+  } 
+   else {
+    bus.emit('alert', { type: 'error', content: '岗位添加错误,请检查格式' })
   }
 }
 

@@ -13,8 +13,8 @@ public interface UserAccountMapper {
 //            " from useraccount,normaluser where useraccount.user_id=normaluser.user_id")
 //    List<AccountAndUser> findAll();
 
-    @Select("select * from useraccount,normaluser where useraccount.user_id=normaluser.user_id" +
-            " and name like concat('%', #{name}, '%')")
+    @Select("select * from useraccount,normaluser where (useraccount.user_id=normaluser.user_id and name like concat('%', #{name}, '%') and role = 'user')\n" +
+            "or (useraccount.user_id=normaluser.user_id and name is NULL)")
     List<AccountAndUser> find(AccountAndUser accountAndUser);
 
     @Select("select * from useraccount where user_id=#{userId}")

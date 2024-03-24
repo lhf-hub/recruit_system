@@ -79,8 +79,9 @@ const submit = async () => {
       } else {
         bus.emit('alert', { type: 'error', content: res.data.msg })
       }
-    } catch {
-      bus.emit('alert', { type: 'error', content: '网络错误' })
+    } catch(e) {
+      // console.log(e)
+      bus.emit('alert', { type: 'error', content: 'ID格式错误' })
     }
   }
 }
