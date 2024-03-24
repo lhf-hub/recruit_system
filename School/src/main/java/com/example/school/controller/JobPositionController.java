@@ -22,6 +22,13 @@ public class JobPositionController {
         if(jobPosition.getPostName()==null||jobPosition.getPostName().isEmpty()){
             return Result.error("岗位名称不可为空");
         }
+        if(jobPosition.getAgeRequirement()<18){
+            return Result.error(501,"年龄必须大于18");
+        }
+        if(jobPosition.getMinSalary()>jobPosition.getMaxSalary()||jobPosition.getNumberRequirement()<0||
+                jobPosition.getMaxSalary()<0||jobPosition.getMinSalary()<0){
+            return Result.error("岗位更新错误");
+        }
         if(jobPositionMapper.findOne(jobPosition.getPostId()).isEmpty()) {
             int result=jobPositionMapper.insert(jobPosition);/*岗位添加个数*/
             if(result>0){
@@ -45,6 +52,13 @@ public class JobPositionController {
     public Result update(@RequestBody JobPosition jobPosition){
         if(jobPosition.getPostName()==null||jobPosition.getPostName().isEmpty()){
             return Result.error("岗位名称不可为空");
+        }
+        if(jobPosition.getAgeRequirement()<18){
+            return Result.error(501,"年龄必须大于18");
+        }
+        if(jobPosition.getMinSalary()>jobPosition.getMaxSalary()||jobPosition.getNumberRequirement()<0||
+                jobPosition.getMaxSalary()<0||jobPosition.getMinSalary()<0){
+            return Result.error("岗位更新错误");
         }
         int result = jobPositionMapper.update(jobPosition);/*岗位更新个数*/
         if(result>0){

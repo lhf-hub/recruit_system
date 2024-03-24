@@ -137,6 +137,7 @@ const resetEditedItem = () => {
     name: '',
     phoneNumber: 0,
   }
+  getUsers()
 }
 const resetNewItem = () => {
   newItem.value = {
@@ -175,7 +176,7 @@ const resetNewItem = () => {
         <VaInput v-model="editedItem.userId" class="my-6" label="用户ID" readonly />
         <VaInput v-model="editedItem.name" class="my-6" label="姓名" readonly />
         <VaInput v-model="editedItem.phoneNumber" class="my-6" label="电话号码" readonly />
-        <VaInput v-model="editedItem.password" class="my-6" type="password" label="密码" />
+        <VaInput v-model="editedItem.password" class="my-6" label="密码" />
       </VaModal>
 
       <VaModal

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface NewsMapper {
-    @Select("select * from news where news_title like  concat('%', #{newsTitle}, '%')")
+    @Select("select * from news where news_title like  concat('%', #{newsTitle}, '%') ORDER BY time DESC")
     List<News> find(String newsTitle);
     @Insert("insert into news(news_id,news_title,news_content,time,department) values " +
             "(#{newsId},#{newsTitle},#{newsContent},#{time},#{department})")

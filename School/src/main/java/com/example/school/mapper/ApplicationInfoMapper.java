@@ -19,7 +19,7 @@ public interface ApplicationInfoMapper {
 
     @Select("SELECT * from normaluser,applicationinfo,jobposition WHERE " +
             "normaluser.user_id=applicationinfo.user_id and applicationinfo.post_id=jobposition.post_id " +
-            "and name like concat('%', #{name}, '%')")
+            "and name like concat('%', #{name}, '%') ORDER BY application_time DESC")
     List<CV> find(CV cv);
 
     @Select("select * from applicationinfo where user_id=#{userId}")
@@ -62,7 +62,7 @@ public interface ApplicationInfoMapper {
     int delete(ApplicationInfo applicationInfo);
     @Delete("delete from applicationinfo where  user_id=#{userId}")/*用户删除时删除某用户所有的应聘信息*/
     void deleteAllUser(int userId);
-    @Delete("delete from applicationinfo where  post_id=#{postId}")/*岗位删除时删除某用户所有的应聘信息*/
+    @Delete("delete from applicationinfo where  post_id=#{postId}")/*岗位删除时删除用户所有的应聘信息*/
     void deleteAllPost(int postId);
 //-------------------------------------------统计sql---------------------------------------------------------
     @Select("SELECT COUNT(*) FROM applicationinfo,jobposition where " +

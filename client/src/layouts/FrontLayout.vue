@@ -132,7 +132,7 @@
         <VaCardTitle style="font-size: 24px">个人简历</VaCardTitle>
         <VaCardContent>
           <VaForm ref="myForm">
-            <VaInput v-model="resumeData.name" label="姓名" />
+            <VaInput v-model="resumeData.name" label="姓名" placeholder="请先输入姓名"/>
             <VaInput
               v-model="resumeData.idNumber"
               label="身份证号"
@@ -144,7 +144,7 @@
             <VaSelect v-model="resumeData.education" label="学历" :options="['大专', '本科', '硕士', '博士']" />
             <VaInput v-model="resumeData.major" label="专业" />
             <VaInput v-model="resumeData.academy" label="毕业院校" />
-            <VaDateInput v-model="resumeData.birthdate" label="出生日期" :rules="[calculateAge]" />
+            <VaDateInput :end-year="new Date().getFullYear() - 18" v-model="resumeData.birthdate" label="出生日期" :rules="[calculateAge]" />
             <VaSelect
               v-model="resumeData.politicsStatus"
               label="政治面貌"
@@ -205,7 +205,7 @@
       <VaCard style="padding: 20px">
         <VaCardTitle style="font-size: 24px">{{ selectMessage.informTitle }}</VaCardTitle>
         <VaCardContent>
-          <VaContent style="padding: 20px; color: #666; font-size: large">{{ messages[0].informContent }}</VaContent>
+          <VaContent style="padding: 20px; color: #666; font-size: large">{{ selectMessage.informContent }}</VaContent>
         </VaCardContent>
         <VaCardActions style="display: flex; justify-content: center; gap: 60px">
           <VaButton color="info" @click="showMailDetail = false">返回</VaButton>
@@ -233,6 +233,8 @@ const { notify } = useToast()
 const calculateAge = (value: Date) => {
   if (value) {
     const birthdate = new Date(value)
+    if (birthdate > (new Date(2007,0,1)))
+      return "年龄需大于等于18岁"
     const today = new Date()
     const age = today.getFullYear() - birthdate.getFullYear()
     resumeData.value.age = age
@@ -273,7 +275,7 @@ const resumeData = ref<ResumeData>({
   education: '',
   major: '',
   academy: '',
-  birthdate: new Date(),
+  birthdate: new Date(2006,1,1),
   politicsStatus: '',
   otherInfo: '',
 })
@@ -283,6 +285,10 @@ const getMyResume = async () => {
   try{
     if (res.data.code === 200) {
       resumeData.value = res.data.data[0]
+      if (!resumeData.value.birthdate){
+        resumeData.value.birthdate = new Date(2006,0,1)
+        calculateAge(resumeData.value.birthdate)
+      }
     } else {
       bus.emit('alert', { type: 'error', content: '服务器错误' })
     }
